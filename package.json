@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.3",
   "description": "A starter project for AngularJS Material",
-  "repository": "https://github.com/angular/material-start",
+  "repository": "https://github.com/ioanvranau/iotplatformdashboard.git",
   "license": "MIT",
   "devDependencies": {
     "karma": "~0.10",
@@ -17,6 +17,7 @@
   "scripts": {
     "postinstall": "bower update",
     "prestart": "npm update",
-    "test": "protractor ./e2e/protractor.conf.js"
+    "test": "protractor ./e2e/protractor.conf.js",
+    "start": "live-server"
   }
 }
