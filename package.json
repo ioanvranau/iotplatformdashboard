@@ -17,7 +17,6 @@
   "scripts": {
     "postinstall": "bower update",
     "prestart": "npm update",
-    "test": "protractor ./e2e/protractor.conf.js",
-    "start": "live-server"
+    "test": "protractor ./e2e/protractor.conf.js"
   }
 }
