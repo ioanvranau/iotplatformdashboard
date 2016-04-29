@@ -19,6 +19,7 @@
         var vm = this;
         $scope.errors = {};
         var myScopeErrors = $scope.errors;
+        var globalScope = $scope;
         var mainDialog = $mdDialog;
 
 
@@ -99,14 +100,41 @@
                 };
             }
         }
-        function deleteDevice(device) {
-            $log.debug('Device id is: ' + device.id + ' and device ip is: ' + device.ip);
+        function deleteDevice($event, device) {
 
-            mainService
-                .deleteDevice($http, device).getData()
-                .then(function () {
-                    $log.debug('Device id is: ' + device.id + ' and device ip is: ' + device.ip + ' was deleted!');
-                });
+            var confirm = $mdDialog.confirm()
+                .title('Would you like to delete the device: ' + device.name + ' with ip: ' + device.ip + ' ?')
+                .clickOutsideToClose(true)
+                .ariaLabel('Delete device')
+                .targetEvent($event)
+                .ok('Yes')
+                .cancel('Cancel');
+            $mdDialog.show(confirm).then(function() {
+                mainService
+                    .deleteDevice($http, device).getData()
+                    .then(function () {
+                        var myEl = angular.element( document.getElementById(device.id) );
+                        myEl.remove();
+                        $log.debug('Device: ' + device.name + ' was deleted!');
+                    });
+            }, function() {
+                $log.debug('Operation canceled!');
+            }, function(err) {
+                // Here is where we can catch the errors and start using the response.
+                myScopeErrors.api = err.data.exception;
+                mainDialog.show(
+                    mainDialog.alert()
+                        .parent(angular.element(document.querySelector('#popupContainer')))
+                        .clickOutsideToClose(true)
+                        .title('Device ' + err.data.message + ' cannot be deleted!')
+                        .textContent(err.data.exception)
+                        .ariaLabel('Alert Dialog ')
+                        .ok('OK')
+                );
+
+            });
+
+
 
         }
         function showAddNewDevicePrompt() {
@@ -151,7 +179,7 @@
                     var template = "";
                     $templateRequest("./src/main/view/deviceCardContent.tmpl.html", false).then(function(html){
                         // Convert the html to an actual DOM node
-                        template = '<md-card md-theme-watch>' +  html  + '</md-card>';
+                        template = html;
                     });
                     mainService
                         .addNewDevice($http, this.device).getData()
@@ -160,7 +188,9 @@
                             //var template = + $templateCache.get('./src/main/view/deviceCardContent.tmpl.html');
 
                             $scope.device = data;
-                            angular.element(document.getElementById('md-cards-devices-content-id')).append($compile(template)($scope));
+                            template = '<md-card id={{device.id}} md-theme-watch>' +  template  + '</md-card>';
+                            globalScope.device = $scope.device;
+                            angular.element(document.getElementById('md-cards-devices-content-id')).append($compile(template)(globalScope));
                             myScopeErrors.api = false;
                         }, function(err) {
                             // Here is where we can catch the errors and start using the response.

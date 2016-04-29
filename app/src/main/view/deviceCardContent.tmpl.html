@@ -3,7 +3,7 @@
         <md-icon md-svg-src="img/icons/{{device.avatar}}.svg" class="avatar"></md-icon>
         <span class="md-headline">{{device.ip}}</span>
     </md-card-title-text>
-    <md-button class="md-icon-button" ng-click="vm.deleteDevice(device)">
+    <md-button class="md-icon-button" ng-click="vm.deleteDevice($event, device)">
         <md-icon md-svg-src="img/icons/delete.svg" aria-label="Delete device"></md-icon>
     </md-button>
 </md-card-title>

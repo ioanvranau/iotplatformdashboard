@@ -60,7 +60,7 @@
 
     <md-content id="md-cards-devices-content-id" flex layout-padding>
 
-        <md-card md-theme-watch ng-repeat="device in vm.devices">
+        <md-card id="{{device.id}}" md-theme-watch ng-repeat="device in vm.devices">
             <ng-include src="'./src/main/view/deviceCardContent.tmpl.html'"></ng-include>
         </md-card>
     </md-content>
