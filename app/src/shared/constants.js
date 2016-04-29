@@ -3,5 +3,5 @@
 
     angular
         .module('app')
-        .constant('apiUrl', "http://localhost:9090/");
+        .constant('apiUrl', "https://iotplatformbackend.herokuapp.com/");
 })();
