@@ -27,6 +27,7 @@
         vm.toggleDevicesList =  buildDelayedToggler('left');;
         vm.showContactOptions = showContactOptions;
         vm.showAddNewDevicePrompt = showAddNewDevicePrompt;
+        vm.deleteDevice = deleteDevice;
 
         // Load all registered devices
         mainService
@@ -98,8 +99,17 @@
                 };
             }
         }
+        function deleteDevice(device) {
+            $log.debug('Device id is: ' + device.id + ' and device ip is: ' + device.ip);
 
-        function showAddNewDevicePrompt($event) {
+            mainService
+                .deleteDevice($http, device).getData()
+                .then(function () {
+                    $log.debug('Device id is: ' + device.id + ' and device ip is: ' + device.ip + ' was deleted!');
+                });
+
+        }
+        function showAddNewDevicePrompt() {
             $scope.status = '  ';
             $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
 
@@ -142,8 +152,6 @@
                     $templateRequest("./src/main/view/deviceCardContent.tmpl.html", false).then(function(html){
                         // Convert the html to an actual DOM node
                         template = '<md-card md-theme-watch>' +  html  + '</md-card>';
-                        //angular.element.append(template);
-                        //$compile(template)($scope);
                     });
                     mainService
                         .addNewDevice($http, this.device).getData()

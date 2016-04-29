@@ -3,11 +3,14 @@
         <md-icon md-svg-src="img/icons/{{device.avatar}}.svg" class="avatar"></md-icon>
         <span class="md-headline">{{device.ip}}</span>
     </md-card-title-text>
+    <md-button class="md-icon-button" ng-click="vm.deleteDevice(device)">
+        <md-icon md-svg-src="img/icons/delete.svg" aria-label="Delete device"></md-icon>
+    </md-button>
 </md-card-title>
 <md-card-content layout="row" layout-align="space-between">
     <span class="md-subhead">{{device.name}}</span>
     <md-card-actions layout="column">
-        <md-button class="md-icon-button" md-no-ink ng-click="vm.showContactOptions($event, device.name)"
+        <md-button class="md-icon-button" md-no-ink ng-click="vm.showContactOptions($event, device)"
                    aria-label="Contact Device">
             <md-icon md-svg-icon="share"></md-icon>
         </md-button>
