@@ -147,7 +147,7 @@
                 controlerAs: "dc",
                 templateUrl: './src/main/view/addNewDeviceDialog.tmpl.html',
                 parent: angular.element(document.body),
-                targetEvent: event,
+                targetEvent: $event,
                 clickOutsideToClose: true,
                 fullscreen: true
 
