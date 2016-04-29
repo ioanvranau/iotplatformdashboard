@@ -137,7 +137,7 @@
 
 
         }
-        function showAddNewDevicePrompt() {
+        function showAddNewDevicePrompt($event) {
             $scope.status = '  ';
             $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
 
