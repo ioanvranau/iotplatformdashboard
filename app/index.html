@@ -27,7 +27,7 @@
 
 <md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2"
             md-component-id="left"
-            md-is-locked-open="$mdMedia('gt-sm')">
+            md-is-locked-open="$mdMedia('gt-md')">
 
     <md-toolbar class="md-whiteframe-z1">
         <h1>Dashboard</h1>
@@ -48,8 +48,8 @@
 
 
 <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2">
-    <md-toolbar layout="row" class="md-whiteframe-z1">
-        <md-button ng-click="vm.toggleDevicesList()" class="md-primary" hide-gt-md >
+    <md-toolbar layout="row" class="md-whiteframe-z1" md-closed>
+        <md-button ng-click="vm.toggleDevicesList()" class="md-primary" aria-label="Menu" hide-gt-md>
             <md-icon md-svg-src="img/icons/menu.svg"></md-icon>
         </md-button>
         <h1>Devices</h1> <!-- TODO get from tab-->

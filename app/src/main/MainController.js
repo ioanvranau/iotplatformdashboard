@@ -40,18 +40,6 @@
         // *********************************
 
         /**
-         * First hide the bottomsheet IF visible, then
-         * hide or Show the 'left' sideNav area
-         */
-        function toggleDevicesList() {
-            var pending = $mdBottomSheet.hide() || $q.when(true);
-
-            pending.then(function () {
-                $mdSidenav('left').toggle();
-            });
-        }
-
-        /**
          * Build handler to open/close a SideNav; when animation finishes
          * report completion in console
          */
