@@ -176,21 +176,15 @@
                 };
                 $scope.answer = function () {
                     $mdDialog.hide();
-                    var template = "";
-                    $templateRequest("./src/main/view/deviceCardContent.tmpl.html", false).then(function(html){
-                        // Convert the html to an actual DOM node
-                        template = html;
-                    });
                     mainService
                         .addNewDevice($http, this.device).getData()
                         .then(function (data) {
                             $log.debug("Success!" + data.ip + " " + data.name);
-                            //var template = + $templateCache.get('./src/main/view/deviceCardContent.tmpl.html');
-
-                            $scope.device = data;
-                            template = '<md-card id={{device.id}} md-theme-watch>' +  template  + '</md-card>';
-                            globalScope.device = $scope.device;
-                            angular.element(document.getElementById('md-cards-devices-content-id')).append($compile(template)(globalScope));
+                            mainService
+                                .loadAllDevices($http).getData()
+                                .then(function (devices) {
+                                    vm.devices = [].concat(devices);
+                                });
                             myScopeErrors.api = false;
                         }, function(err) {
                             // Here is where we can catch the errors and start using the response.
