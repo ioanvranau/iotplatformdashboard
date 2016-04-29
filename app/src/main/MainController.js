@@ -12,9 +12,9 @@
      * @constructor
      */
 
-    MainController.$inject = ['mainService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$http', '$scope', '$mdDialog', '$mdMedia'];
+    MainController.$inject = ['mainService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$http', '$scope', '$mdDialog', '$mdMedia', '$timeout'];
 
-    function MainController(mainService, $mdSidenav, $mdBottomSheet, $log, $q, $http, $scope, $mdDialog, $mdMedia) {
+    function MainController(mainService, $mdSidenav, $mdBottomSheet, $log, $q, $http, $scope, $mdDialog, $mdMedia, $timeout) {
 
         var vm = this;
         $scope.errors = {};
@@ -24,7 +24,7 @@
 
         vm.devices = [];
         vm.currDevice = '';
-        vm.toggleList = toggleDevicesList;
+        vm.toggleDevicesList =  buildDelayedToggler('left');;
         vm.showContactOptions = showContactOptions;
         vm.showAddNewDevicePrompt = showAddNewDevicePrompt;
 
@@ -49,6 +49,33 @@
             pending.then(function () {
                 $mdSidenav('left').toggle();
             });
+        }
+
+        /**
+         * Build handler to open/close a SideNav; when animation finishes
+         * report completion in console
+         */
+        function buildDelayedToggler(navID) {
+            return debounce(function() {
+                $mdSidenav(navID)
+                    .toggle()
+                    .then(function () {
+                        $log.debug("toggle " + navID + " is done");
+                    });
+            }, 200);
+        }
+
+        function debounce(func, wait, context) {
+            var timer;
+            return function debounced() {
+                var context = $scope,
+                    args = Array.prototype.slice.call(arguments);
+                $timeout.cancel(timer);
+                timer = $timeout(function() {
+                    timer = undefined;
+                    func.apply(context, args);
+                }, wait || 10);
+            };
         }
 
         /**
