@@ -1,14 +1,52 @@
 <md-card-title>
     <md-card-title-text>
         <md-icon md-svg-src="img/icons/android.svg" class="avatar"></md-icon>
-        <span class="md-headline">{{device.ip}}</span>
+        <span class="md-headline">Ip: {{device.ip}}</span>
     </md-card-title-text>
     <md-button class="md-icon-button" ng-click="vm.deleteDevice($event, device)">
         <md-icon md-svg-src="img/icons/delete.svg" aria-label="Delete device"></md-icon>
     </md-button>
 </md-card-title>
 <md-card-content layout="row" layout-align="space-between">
-    <span class="md-subhead">{{device.name}}</span>
+    <md-card-actions layout="column">
+        <span class="md-subhead">Name: {{device.name}} i</span>
+        <span class="md-subhead">Type: {{device.type}}</span>
+        <span class="md-subhead">Location: {{device.location.x}}, {{device.location.y}}</span>
+        <span class="md-subhead">Tags:</span>
+        <md-chips ng-model="device.tags" readonly="false" md-enable-chip-edit="true" md-removable="true"
+                  class="custom-chips">
+            <md-chip-template>
+                <span><strong>{{$chip.name}}</strong></span>
+            </md-chip-template>
+            <button md-chip-remove class="md-primary vegetablechip">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </md-chips>
+    </md-card-actions>
+    <md-card-actions layout="column">
+        <span class="md-subhead">Access Rights:</span>
+        <md-chips ng-model="device.accessRights" readonly="false" md-enable-chip-edit="true" md-removable="true"
+                  class="custom-chips">
+            <md-chip-template>
+                <span><strong>{{$chip.name}}</strong></span>
+            </md-chip-template>
+            <button md-chip-remove class="md-primary vegetablechip">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </md-chips>
+
+        <span class="md-subhead">Sensors:</span>
+        <md-chips ng-model="device.sensors" readonly="false" md-enable-chip-edit="true" md-removable="true"
+                  class="custom-chips">
+            <md-chip-template>
+                <span><strong>{{$chip.name}}</strong></span>
+            </md-chip-template>
+            <button md-chip-remove class="md-primary vegetablechip">
+                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+            </button>
+        </md-chips>
+
+    </md-card-actions>
     <md-card-actions layout="column">
         <md-button class="md-icon-button" md-no-ink ng-click="vm.showContactOptions($event, device)"
                    aria-label="Contact Device">

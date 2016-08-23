@@ -35,6 +35,7 @@
             .loadAllDevices($http).getData()
             .then(function (devices) {
                 vm.devices = [].concat(devices);
+                console.log(vm.devices);
             });
 
         // *********************************
