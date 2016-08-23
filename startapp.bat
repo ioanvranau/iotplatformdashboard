@@ -1,0 +1,3 @@
+cd app
+
+live-server

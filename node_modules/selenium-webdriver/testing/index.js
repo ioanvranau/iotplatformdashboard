@@ -116,7 +116,7 @@ function wrapped(globalFn) {
 function makeAsyncTestFn(fn) {
   var async = fn.length > 0; // if test function expects a callback, its "async"
 
-  var ret = function(done) {
+  var ret = /** @type {function(this: mocha.Context)}*/ (function(done) {
     var runnable = this.runnable();
     var mochaCallback = runnable.callback;
     runnable.callback = function() {
@@ -145,7 +145,7 @@ function makeAsyncTestFn(fn) {
         }
       }, flow);
     }, runnable.fullTitle()).then(seal(done), done);
-  };
+  });
 
   ret.toString = function() {
     return fn.toString();
@@ -188,6 +188,16 @@ function ignore(predicateFn) {
 
 
 // PUBLIC API
+
+
+/**
+ * @return {!promise.ControlFlow} the control flow instance used by this module
+ *     to coordinate test actions.
+ */
+exports.controlFlow = function(){
+  return flow;
+};
+
 
 /**
  * Registers a new test suite.
