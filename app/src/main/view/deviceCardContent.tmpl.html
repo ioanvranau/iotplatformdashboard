@@ -13,37 +13,28 @@
         <span class="md-subhead">Type: {{device.type}}</span>
         <span class="md-subhead">Location: {{device.location.x}}, {{device.location.y}}</span>
         <span class="md-subhead">Tags:</span>
-        <md-chips ng-model="device.tags" readonly="false" md-enable-chip-edit="true" md-removable="true"
+        <md-chips ng-model="device.tags" readonly="true" md-enable-chip-edit="false" md-removable="false"
                   class="custom-chips">
             <md-chip-template>
                 <span><strong>{{$chip.name}}</strong></span>
             </md-chip-template>
-            <button md-chip-remove class="md-primary vegetablechip">
-                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
-            </button>
         </md-chips>
     </md-card-actions>
     <md-card-actions layout="column">
         <span class="md-subhead">Access Rights:</span>
-        <md-chips ng-model="device.accessRights" readonly="false" md-enable-chip-edit="true" md-removable="true"
+        <md-chips ng-model="device.accessRights" readonly="true" md-enable-chip-edit="false" md-removable="false"
                   class="custom-chips">
             <md-chip-template>
                 <span><strong>{{$chip.name}}</strong></span>
             </md-chip-template>
-            <button md-chip-remove class="md-primary vegetablechip">
-                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
-            </button>
         </md-chips>
 
         <span class="md-subhead">Sensors:</span>
-        <md-chips ng-model="device.sensors" readonly="false" md-enable-chip-edit="true" md-removable="true"
+        <md-chips ng-model="device.sensors" readonly="true" md-enable-chip-edit="false" md-removable="false"
                   class="custom-chips">
             <md-chip-template>
                 <span><strong>{{$chip.name}}</strong></span>
             </md-chip-template>
-            <button md-chip-remove class="md-primary vegetablechip">
-                <md-icon md-svg-src="img/icons/close.svg"></md-icon>
-            </button>
         </md-chips>
 
     </md-card-actions>

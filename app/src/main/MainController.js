@@ -168,7 +168,8 @@
                 $scope.device = {
                     ip: 'localhost',
                     name: 'Phone',
-                    tags: []
+                    tags: [],
+                    accessRights: []
                 };
                 $scope.hide = function() {
                     $mdDialog.hide();
@@ -179,7 +180,7 @@
                 $scope.answer = function() {
                     $mdDialog.hide();
                     mainService
-                        .addNewDevice($http, this.device).getData()
+                        .addNewDevice($http, $scope.device).getData()
                         .then(function(data) {
                             $log.debug("Success!" + data.ip + " " + data.name);
                             loadAllDevices();

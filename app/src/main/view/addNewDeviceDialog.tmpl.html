@@ -9,42 +9,61 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <md-dialog-content layout-gt-sm="column" layout-padding>
-            <md-input-container>
-                <label>Ip</label>
-                <input ng-model="device.ip">
-            </md-input-container>
-            <md-input-container>
-                <label>Name</label>
-                <input ng-model="device.name">
-            </md-input-container>
-            <md-input-container>
-                <label>Type</label>
-                <input ng-model="device.type">
-            </md-input-container>
+        <md-dialog-content layout-gt-sm="row" layout-padding>
+            <md-dialog-content layout-gt-sm="column" layout-padding>
+                <md-input-container>
+                    <label>Ip</label>
+                    <input ng-model="device.ip">
+                </md-input-container>
+                <md-input-container>
+                    <label>Name</label>
+                    <input ng-model="device.name">
+                </md-input-container>
+                <md-input-container>
+                    <label>Type</label>
+                    <input ng-model="device.type">
+                </md-input-container>
+            </md-dialog-content>
 
-            <md-input-container>
-                <label>Location X</label>
-                <input ng-model="device.location.x">
-            </md-input-container>
+            <md-dialog-content layout-gt-sm="column" layout-padding>
+                <md-input-container>
+                    <label>Location X</label>
+                    <input ng-model="device.location.x">
+                </md-input-container>
 
-            <md-input-container>
-                <label>Location Y</label>
-                <input ng-model="device.location.y">
-            </md-input-container>
+                <md-input-container>
+                    <label>Location Y</label>
+                    <input ng-model="device.location.y">
+                </md-input-container>
 
-            <md-input-container>
-                <label>Tags: </label>
-                <md-chips ng-model="device.tags" readonly="false" md-enable-chip-edit="true" md-removable="true"
-                          class="custom-chips">
-                    <md-chip-template>
-                        <span><strong>{{$chip.name}}</strong></span>
-                    </md-chip-template>
-                    <button md-chip-remove class="md-primary vegetablechip">
-                        <md-icon md-svg-src="img/icons/close.svg"></md-icon>
-                    </button>
-                </md-chips>
-            </md-input-container>
+                <md-input-container>
+                    <label>Tags: </label>
+                    <md-chips ng-model="device.tags" readonly="false" md-removable="true"
+                              class="custom-chips">
+                        <md-chip-template>
+                            <span><strong>{{$chip}}</strong></span>
+                        </md-chip-template>
+                        <button md-chip-remove class="md-primary vegetablechip">
+                            <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                        </button>
+                    </md-chips>
+                </md-input-container>
+            </md-dialog-content>
+
+            <md-dialog-content layout-gt-sm="column" layout-padding>
+                <md-input-container>
+                    <label>Access Rights: </label>
+                    <md-chips ng-model="device.accessRights" readonly="false" md-removable="true"
+                              class="custom-chips">
+                        <md-chip-template>
+                            <span><strong>{{$chip}}</strong></span>
+                        </md-chip-template>
+                        <button md-chip-remove class="md-primary vegetablechip">
+                            <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                        </button>
+                    </md-chips>
+                </md-input-container>
+            </md-dialog-content>
         </md-dialog-content>
 
         <md-dialog-actions layout="row">

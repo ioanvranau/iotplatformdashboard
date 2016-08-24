@@ -41,12 +41,23 @@
                     }
                 }
 
+                var accessRights = [];
+                if (device.accessRights) {
+                    for (i = 0; i< device.accessRights.length; i++) {
+                        var accessRight = {
+                            name: device.accessRights[i]
+                        };
+                        accessRights.push(accessRight);
+                    }
+                }
+
                 var jsonDevice = JSON.stringify({
                     ip: device.ip,
                     type: device.type,
                     name: device.name,
                     location: location,
-                    tags: tags
+                    tags: tags,
+                    accessRights: accessRights
                 });
                 var getData = function() {
                     console.log(jsonDevice);
