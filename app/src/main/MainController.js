@@ -1,4 +1,4 @@
-(function () {
+(function() {
 
     angular
         .module('app')
@@ -19,24 +19,27 @@
         var vm = this;
         $scope.errors = {};
         var myScopeErrors = $scope.errors;
-        var globalScope = $scope;
         var mainDialog = $mdDialog;
 
 
         vm.devices = [];
         vm.currDevice = '';
-        vm.toggleDevicesList =  buildDelayedToggler('left');;
+        vm.toggleDevicesList = buildDelayedToggler('left');
         vm.showContactOptions = showContactOptions;
         vm.showAddNewDevicePrompt = showAddNewDevicePrompt;
         vm.deleteDevice = deleteDevice;
 
         // Load all registered devices
-        mainService
-            .loadAllDevices($http).getData()
-            .then(function (devices) {
-                vm.devices = [].concat(devices);
-                console.log(vm.devices);
-            });
+        function loadAllDevices() {
+            mainService
+                .loadAllDevices($http).getData()
+                .then(function(devices) {
+                    console.log(devices);
+                    vm.devices = [].concat(devices);
+                });
+        }
+
+        loadAllDevices();
 
         // *********************************
         // Internal methods
@@ -50,7 +53,7 @@
             return debounce(function() {
                 $mdSidenav(navID)
                     .toggle()
-                    .then(function () {
+                    .then(function() {
                         $log.debug("toggle " + navID + " is done");
                     });
             }, 200);
@@ -81,7 +84,7 @@
                 controllerAs: "cp",
                 bindToController: true,
                 targetEvent: $event
-            }).then(function (clickedItem) {
+            }).then(function(clickedItem) {
                 clickedItem && $log.debug(clickedItem.name + ' clicked!');
             });
 
@@ -96,11 +99,12 @@
                     {name: 'Google+', icon: 'google_plus', icon_url: 'assets/svg/google_plus.svg'},
                     {name: 'Hangout', icon: 'hangouts', icon_url: 'assets/svg/hangouts.svg'}
                 ];
-                this.submitContact = function (action) {
+                this.submitContact = function(action) {
                     $mdBottomSheet.hide(action);
                 };
             }
         }
+
         function deleteDevice($event, device) {
 
             var confirm = $mdDialog.confirm()
@@ -113,8 +117,8 @@
             $mdDialog.show(confirm).then(function() {
                 mainService
                     .deleteDevice($http, device).getData()
-                    .then(function () {
-                        var myEl = angular.element( document.getElementById(device.id) );
+                    .then(function() {
+                        var myEl = angular.element(document.getElementById(device.id));
                         myEl.remove();
                         $log.debug('Device: ' + device.name + ' was deleted!');
                     });
@@ -134,10 +138,8 @@
                 );
 
             });
-
-
-
         }
+
         function showAddNewDevicePrompt($event) {
             $scope.status = '  ';
             $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
@@ -152,40 +154,35 @@
                 clickOutsideToClose: true,
                 fullscreen: true
 
-            }).then(function () {
+            }).then(function() {
                 $scope.status = 'OK';
                 $log.debug('OK');
-            }, function () {
+            }, function() {
                 var dialogCanceled = 'You cancelled the dialog.';
                 $scope.status = dialogCanceled;
                 $log.debug(dialogCanceled);
             });
 
-            function DialogController($scope, $mdDialog, $compile, $templateRequest) {
+            function DialogController($scope, $mdDialog) {
 
                 $scope.device = {
                     ip: 'localhost',
-                    name: 'Phone'
+                    name: 'Phone',
+                    tags: []
                 };
-
-
-                $scope.hide = function () {
+                $scope.hide = function() {
                     $mdDialog.hide();
                 };
-                $scope.cancel = function () {
+                $scope.cancel = function() {
                     $mdDialog.cancel();
                 };
-                $scope.answer = function () {
+                $scope.answer = function() {
                     $mdDialog.hide();
                     mainService
                         .addNewDevice($http, this.device).getData()
-                        .then(function (data) {
+                        .then(function(data) {
                             $log.debug("Success!" + data.ip + " " + data.name);
-                            mainService
-                                .loadAllDevices($http).getData()
-                                .then(function (devices) {
-                                    vm.devices = [].concat(devices);
-                                });
+                            loadAllDevices();
                             myScopeErrors.api = false;
                         }, function(err) {
                             // Here is where we can catch the errors and start using the response.
