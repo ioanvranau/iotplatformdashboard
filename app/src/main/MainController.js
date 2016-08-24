@@ -164,13 +164,46 @@
             });
 
             function DialogController($scope, $mdDialog) {
-
                 $scope.device = {
                     ip: 'localhost',
                     name: 'Phone',
                     tags: [],
                     accessRights: []
                 };
+                $scope.selectedItem = null;
+                $scope.searchText = null;
+                loadAllAccessRights();
+
+                $scope.selectedAccessRights = [];
+                $scope.numberChips = [];
+                $scope.numberChips2 = [];
+                $scope.numberBuffer = '';
+
+                console.log($scope.accessRights);
+
+
+                $scope.querySearch = function querySearch(query) {
+                    return query ? $scope.accessRights.filter(createFilterFor(query)) : [];
+                };
+
+                function createFilterFor(query) {
+                    var lowercaseQuery = angular.lowercase(query);
+
+                    return function filterFn(accessRight) {
+                        return (accessRight.name.indexOf(lowercaseQuery) === 0);
+                    };
+                }
+                // Load all registered devices
+                function loadAllAccessRights() {
+                    mainService
+                        .loadAccessRights($http).getData()
+                        .then(function(accessRights) {
+                            console.log(accessRights);
+                            $scope.accessRights = [].concat(accessRights);
+                        });
+                }
+
+
                 $scope.hide = function() {
                     $mdDialog.hide();
                 };

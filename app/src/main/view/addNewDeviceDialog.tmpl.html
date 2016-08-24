@@ -53,10 +53,14 @@
             <md-dialog-content layout-gt-sm="column" layout-padding>
                 <md-input-container>
                     <label>Access Rights: </label>
-                    <md-chips ng-model="device.accessRights" readonly="false" md-removable="true"
+                    <md-chips ng-model="device.accessRights" md-autocomplete-snap="" readonly="false" md-removable="true" md-require-match=""
                               class="custom-chips">
+                        <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearch(searchText)" md-item-text="item.name" placeholder="Search for an access right">
+                            <span md-highlight-text="searchText">{{item.name}} </span>
+                        </md-autocomplete>
+
                         <md-chip-template>
-                            <span><strong>{{$chip}}</strong></span>
+                            <span><strong>{{$chip.name}}</strong></span>
                         </md-chip-template>
                         <button md-chip-remove class="md-primary vegetablechip">
                             <md-icon md-svg-src="img/icons/close.svg"></md-icon>

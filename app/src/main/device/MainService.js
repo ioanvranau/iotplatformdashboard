@@ -11,12 +11,24 @@
     function mainService($q, apiUrl) {
         // Promise-based API
         var url = apiUrl + "device";
+        var urlAccess = apiUrl + 'accessRight';
         return {
             loadAllDevices: function($http) {
                 var getData = function() {
 
                     return $http.get(url).then(function(result) {
-                        return result.data;
+                        var data = result.data;
+                        return data;
+                    });
+                };
+                return {getData: getData};
+            },
+
+            loadAccessRights: function($http) {
+                var getData = function() {
+                    return $http.get(urlAccess).then(function(result) {
+                        var data = result.data;
+                        return data;
                     });
                 };
                 return {getData: getData};
@@ -45,7 +57,7 @@
                 if (device.accessRights) {
                     for (i = 0; i< device.accessRights.length; i++) {
                         var accessRight = {
-                            name: device.accessRights[i]
+                            name: device.accessRights[i].name
                         };
                         accessRights.push(accessRight);
                     }
