@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v1.1.0-master-87c4b01
+ * v1.1.0-master-0cd2a59
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -14,6 +14,7 @@
  * @description
  * Scrollable content
  */
+mdContentDirective.$inject = ["$mdTheming"];
 angular.module('material.components.content', [
   'material.core'
 ])
@@ -78,7 +79,6 @@ function mdContentDirective($mdTheming) {
     this.$element = $element;
   }
 }
-mdContentDirective.$inject = ["$mdTheming"];
 
 function iosScrollFix(node) {
   // IOS FIX:

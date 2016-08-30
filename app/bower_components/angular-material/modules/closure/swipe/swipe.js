@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v1.1.0-master-87c4b01
+ * v1.1.0-master-0cd2a59
  */
 goog.provide('ngmaterial.components.swipe');
 goog.require('ngmaterial.core');
@@ -83,10 +83,10 @@ angular.module('material.components.swipe', ['material.core'])
     .directive('mdSwipeDown', getDirective('SwipeDown'));
 
 function getDirective(name) {
+    DirectiveFactory.$inject = ["$parse"];
   var directiveName = 'md' + name;
   var eventName = '$md.' + name.toLowerCase();
 
-    DirectiveFactory.$inject = ["$parse"];
   return DirectiveFactory;
 
   /* ngInject */

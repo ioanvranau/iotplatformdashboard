@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v1.1.0-master-87c4b01
+ * v1.1.0-master-0cd2a59
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -14,6 +14,7 @@
  * @description
  * Card components.
  */
+mdCardDirective.$inject = ["$mdTheming"];
 angular.module('material.components.card', [
     'material.core'
   ])
@@ -138,6 +139,5 @@ function mdCardDirective($mdTheming) {
     }
   };
 }
-mdCardDirective.$inject = ["$mdTheming"];
 
 })(window, window.angular);

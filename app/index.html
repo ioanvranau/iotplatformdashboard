@@ -73,6 +73,11 @@
 <script src="./bower_components/angular-aria/angular-aria.js"></script>
 <script type="text/javascript" src="./bower_components/angular-material/angular-material.js"></script>
 
+<script src='./bower_components/lodash/lodash.js'></script>
+<script src='./bower_components/angular-simple-logger/dist/angular-simple-logger.min.js'></script>
+<script src='./bower_components/angular-google-maps/dist/angular-google-maps.min.js'></script>
+<script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
+
 <script src="src/main/Main.js"></script>
 <script src="src/main/MainController.js"></script>
 <script src="src/main/device/MainService.js"></script>
@@ -81,8 +86,12 @@
 <script type="text/javascript">
 
     angular
-            .module('starterApp', ['ngMaterial', 'app'])
-            .config(function ($mdThemingProvider, $mdIconProvider) {
+            .module('starterApp', [
+                'ngMaterial',
+                'app',
+                'uiGmapgoogle-maps'
+            ])
+            .config(function($mdThemingProvider, $mdIconProvider) {
 
                 $mdIconProvider
                         .defaultIconSet("./assets/svg/avatars.svg", 128)
@@ -98,7 +107,14 @@
                         .primaryPalette('blue')
                         .accentPalette('red');
 
-            });
+            })
+            .config(['uiGmapGoogleMapApiProvider', function (GoogleMapApi) {
+                GoogleMapApi.configure({
+                    key: 'AIzaSyAjwxdTEawNrXKBV10Y6o13o-xzNW3nomY',
+                    v: '3.17',
+                    libraries: 'weather,geometry,visualization'
+                });
+            }])
 
 </script>
 

@@ -1,0 +1,45 @@
+<md-dialog aria-label="Add new device" ng-cloak>
+    <form>
+        <md-toolbar style="margin-bottom: 20px;">
+            <div class="md-toolbar-tools">
+                <h2>Add new sensor for device with ip: {{device.ip}} </h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="img/icons/ic_close_white_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content layout-gt-sm="column" layout-padding>
+            <md-input-container>
+                <label>Name</label>
+                <input ng-model="sensor.name">
+            </md-input-container>
+            <md-input-container>
+                <label>Type</label>
+                <input ng-model="sensor.type">
+            </md-input-container>
+            <md-input-container>
+                <label>Metadata: (Press enter to add one) </label>
+                <md-chips ng-model="sensor.metadata" readonly="false" md-removable="true"
+                          class="custom-chips">
+                    <md-chip-template>
+                        <span><strong>{{$chip}}</strong></span>
+                    </md-chip-template>
+                    <button md-chip-remove class="md-primary vegetablechip">
+                        <md-icon md-svg-src="img/icons/close.svg"></md-icon>
+                    </button>
+                </md-chips>
+            </md-input-container>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                Cancel
+            </md-button>
+            <md-button ng-click="answer()" style="margin-right:20px;">
+                OK
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

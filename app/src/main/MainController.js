@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
 
     angular
         .module('app')
@@ -21,23 +22,30 @@
         var myScopeErrors = $scope.errors;
         var mainDialog = $mdDialog;
 
-
         vm.devices = [];
         vm.currDevice = '';
         vm.toggleDevicesList = buildDelayedToggler('left');
         vm.showContactOptions = showContactOptions;
         vm.showAddNewDevicePrompt = showAddNewDevicePrompt;
         vm.deleteDevice = deleteDevice;
+        vm.showNewSensorDialog = showNewSensorDialog;
 
         // Load all registered devices
         function loadAllDevices() {
             mainService
-                .loadAllDevices($http).getData()
+                .loadAllDevices($http, $scope).getData()
                 .then(function(devices) {
-                    console.log(devices);
                     vm.devices = [].concat(devices);
                 });
         }
+        $scope.options = {scrollwheel: false};
+        $scope.coordsUpdates = 0;
+        $scope.dynamicMoveCtr = 0;
+        $scope.$watchCollection("marker.coords", function (newVal, oldVal) {
+            if (_.isEqual(newVal, oldVal))
+                return;
+            $scope.coordsUpdates++;
+        });
 
         loadAllDevices();
 
@@ -101,6 +109,71 @@
                 ];
                 this.submitContact = function(action) {
                     $mdBottomSheet.hide(action);
+                };
+            }
+        }
+
+        function showNewSensorDialog($event, device) {
+
+            $scope.status = '  ';
+            $scope.customFullscreen = $mdMedia('xs') || $mdMedia('sm');
+
+            return $mdDialog.show({
+                controller: SensorDialogController,
+                controllerAs: "sdc",
+                templateUrl: './src/main/view/addNewDeviceSensorDialog.tmpl.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: true,
+                fullscreen: true
+
+            }).then(function() {
+                $scope.status = 'OK';
+                $log.debug('OK');
+            }, function() {
+                var dialogCanceled = 'You cancelled the dialog.';
+                $scope.status = dialogCanceled;
+                $log.debug(dialogCanceled);
+            });
+
+            function SensorDialogController($scope, $mdDialog) {
+
+                console.log(device);
+                $scope.sensor = {
+                    name: 'Phone',
+                    type: 'acc',
+                    metadata: []
+                };
+                $scope.device = device;
+
+                $scope.hide = function() {
+                    $mdDialog.hide();
+                };
+                $scope.cancel = function() {
+                    $mdDialog.cancel();
+                };
+                $scope.answer = function() {
+                    $mdDialog.hide();
+                    mainService
+                        .addNewSensor($http, $scope.sensor, $scope.device).getData()
+                        .then(function(data) {
+                            $log.debug("Success!" + data.name);
+                            loadAllDevices();
+                            myScopeErrors.api = false;
+                        }, function(err) {
+                            // Here is where we can catch the errors and start using the response.
+                            myScopeErrors.api = err.data.exception;
+                            mainDialog.show(
+                                mainDialog.alert()
+                                    .parent(angular.element(document.querySelector('#popupContainer')))
+                                    .clickOutsideToClose(true)
+                                    .title('Sensor ' + err.data.message + ' cannot be added. Please check again the input provided!')
+                                    .textContent(err.data.exception)
+                                    .ariaLabel('Alert')
+                                    .ok('OK')
+                            );
+
+                        });
                 };
             }
         }
@@ -179,9 +252,6 @@
                 $scope.numberChips2 = [];
                 $scope.numberBuffer = '';
 
-                console.log($scope.accessRights);
-
-
                 $scope.querySearch = function querySearch(query) {
                     return query ? $scope.accessRights.filter(createFilterFor(query)) : [];
                 };
@@ -193,12 +263,12 @@
                         return (accessRight.name.indexOf(lowercaseQuery) === 0);
                     };
                 }
+
                 // Load all registered devices
                 function loadAllAccessRights() {
                     mainService
                         .loadAccessRights($http).getData()
                         .then(function(accessRights) {
-                            console.log(accessRights);
                             $scope.accessRights = [].concat(accessRights);
                         });
                 }
@@ -227,7 +297,7 @@
                                     .clickOutsideToClose(true)
                                     .title('Device ' + err.data.message + ' cannot be added. Please check again the provided ip!')
                                     .textContent(err.data.exception)
-                                    .ariaLabel('Alert Dialog Demo')
+                                    .ariaLabel('Alert')
                                     .ok('OK')
                             );
 

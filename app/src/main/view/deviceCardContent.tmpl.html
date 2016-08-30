@@ -11,8 +11,26 @@
     <md-card-actions layout="column">
         <span class="md-subhead">Name: {{device.name}}</span>
         <span class="md-subhead">Type: {{device.type}}</span>
-        <span class="md-subhead">Location: {{device.location.x}}, {{device.location.y}}</span>
-        <span class="md-subhead">Tags:</span>
+        <span class="md-subhead">Latitude: {{device.location.latitude}}</span>
+        <span class="md-subhead">Longitude: {{device.location.longitude}}</span>
+        <md-checkbox ng-model="device.map.show" aria-label="Showmap?" >
+            Show map
+        </md-checkbox>
+        <div ng-if="device.map.show">
+            <ui-gmap-google-map
+                    center="device.map.center"
+                    zoom="device.map.zoom"
+                    dragging="device.map.dragging"
+                    bounds="device.map.bounds"
+                    events="device.map.events"
+                    options="device.map.options"
+                    pan="true"
+                    control="device.map.control">
+                <ui-gmap-marker coords="device.map.clickedMarker" idKey="device.map.clickedMarker.id"
+                                options="device.map.clickedMarker.options">
+                </ui-gmap-marker>
+            </ui-gmap-google-map>
+        </div>
         <md-chips ng-model="device.tags" readonly="true" md-enable-chip-edit="false" md-removable="false"
                   class="custom-chips">
             <md-chip-template>
@@ -29,11 +47,17 @@
             </md-chip-template>
         </md-chips>
 
-        <span class="md-subhead">Sensors:</span>
+        <div>
+            <span class="md-subhead">Sensors</span>
+            <md-button class="md-icon-button" ng-click="vm.showNewSensorDialog($event, device)">
+                <md-icon md-svg-src="img/icons/plus.svg"></md-icon>
+            </md-button>
+        </div>
         <md-chips ng-model="device.sensors" readonly="true" md-enable-chip-edit="false" md-removable="false"
                   class="custom-chips">
             <md-chip-template>
                 <span><strong>{{$chip.name}}</strong></span>
+                <em>({{$chip.type}})</em>
             </md-chip-template>
         </md-chips>
 

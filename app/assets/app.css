@@ -182,3 +182,7 @@ span.name {
 .custom-chips md-chips-wrap.md-removable md-chip md-chip-template {
     padding-right: 5px;
 }
+
+.angular-google-map-container {
+    height: 400px;
+}
