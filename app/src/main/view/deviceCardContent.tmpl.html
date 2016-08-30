@@ -11,12 +11,19 @@
     <md-card-actions layout="column">
         <span class="md-subhead">Name: {{device.name}}</span>
         <span class="md-subhead">Type: {{device.type}}</span>
+        <span class="md-subhead">Tags: </span>
+        <md-chips ng-model="device.tags" readonly="true" md-enable-chip-edit="false" md-removable="false"
+                  class="custom-chips">
+            <md-chip-template>
+                <span><strong>{{$chip.name}}</strong></span>
+            </md-chip-template>
+        </md-chips>
         <span class="md-subhead">Latitude: {{device.location.latitude}}</span>
         <span class="md-subhead">Longitude: {{device.location.longitude}}</span>
         <md-checkbox ng-model="device.map.show" aria-label="Showmap?" >
             Show map
         </md-checkbox>
-        <div ng-if="device.map.show">
+        <md-content ng-if="device.map.show">
             <ui-gmap-google-map
                     center="device.map.center"
                     zoom="device.map.zoom"
@@ -30,13 +37,7 @@
                                 options="device.map.clickedMarker.options">
                 </ui-gmap-marker>
             </ui-gmap-google-map>
-        </div>
-        <md-chips ng-model="device.tags" readonly="true" md-enable-chip-edit="false" md-removable="false"
-                  class="custom-chips">
-            <md-chip-template>
-                <span><strong>{{$chip.name}}</strong></span>
-            </md-chip-template>
-        </md-chips>
+        </md-content>
     </md-card-actions>
     <md-card-actions layout="column">
         <span class="md-subhead">Access Rights:</span>

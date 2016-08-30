@@ -25,7 +25,7 @@
                 </md-input-container>
             </md-dialog-content>
 
-            <md-dialog-content layout-gt-sm="column" layout-padding>
+            <md-dialog-content layout-gt-sm="row" layout-padding>
                 <md-input-container>
                     <label>Latitude</label>
                     <input ng-model="device.location.latitude">
@@ -53,9 +53,12 @@
             <md-dialog-content layout-gt-sm="column" layout-padding>
                 <md-input-container>
                     <label>Access Rights: </label>
-                    <md-chips ng-model="device.accessRights" md-autocomplete-snap="" readonly="false" md-removable="true" md-require-match=""
+                    <md-chips ng-model="device.accessRights" md-autocomplete-snap="" readonly="false"
+                              md-removable="true" md-require-match=""
                               class="custom-chips">
-                        <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearch(searchText)" md-item-text="item.name" placeholder="Search for an access right">
+                        <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText"
+                                         md-items="item in querySearch(searchText)" md-item-text="item.name"
+                                         placeholder="Search for an access right">
                             <span md-highlight-text="searchText">{{item.name}} </span>
                         </md-autocomplete>
 
@@ -69,6 +72,24 @@
                 </md-input-container>
             </md-dialog-content>
         </md-dialog-content>
+        <md-checkbox ng-model="device.map.show" aria-label="Showmap?">
+            Show map
+        </md-checkbox>
+        <div ng-if="device.map.show">
+            <ui-gmap-google-map
+                    center="device.map.center"
+                    zoom="device.map.zoom"
+                    dragging="device.map.dragging"
+                    bounds="device.map.bounds"
+                    events="device.map.events"
+                    options="device.map.options"
+                    pan="true"
+                    control="device.map.control">
+                <ui-gmap-marker coords="device.map.clickedMarker" idKey="device.map.clickedMarker.id"
+                                options="device.map.clickedMarker.options">
+                </ui-gmap-marker>
+            </ui-gmap-google-map>
+        </div>
 
         <md-dialog-actions layout="row">
             <span flex></span>

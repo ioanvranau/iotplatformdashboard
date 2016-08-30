@@ -238,11 +238,17 @@
 
             function DialogController($scope, $mdDialog) {
                 $scope.device = {
-                    ip: 'localhost',
-                    name: 'Phone',
+                    ip: '',
+                    name: 'Device',
+                    id: 1,
                     tags: [],
+                    location: {
+                        latitude: 46.77224125123537,
+                        longitude: 23.5853773355484
+                    },
                     accessRights: []
                 };
+                mainService.addMapToDevice($scope.device, $scope, false);
                 $scope.selectedItem = null;
                 $scope.searchText = null;
                 loadAllAccessRights();
