@@ -62,6 +62,13 @@
             </md-chip-template>
         </md-chips>
 
+
+        <md-button ng-click="vm.client.connect(vm.options);">1. Connect</md-button>
+        <md-button ng-click="vm.client.subscribe('testtopic/#', {qos: 2}); alert('Subscribed');">2. Subscribe</md-button>
+        <md-button ng-click="vm.publish('Hello Foo !','testtopic/bar',2);">3. Publish</md-button>
+        <md-button ng-click="vm.client.disconnect();">(4. Disconnect)</md-button>
+
+
     </md-card-actions>
     <md-card-actions layout="column">
         <md-button class="md-icon-button" md-no-ink ng-click="vm.showContactOptions($event, device)"
