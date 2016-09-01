@@ -130,7 +130,8 @@
 
     function connect() {
         var target = document.getElementById('target').value;
-        ws = new SockJS('http://localhost:9090' + target);
+//        ws = new SockJS('http://localhost:9090' + target);
+        ws = new SockJS('https://iotplatformbackend.herokuapp.com' + target);
         ws.onopen = function () {
             setConnected(true);
             log('Info: WebSocket connection opened.');
