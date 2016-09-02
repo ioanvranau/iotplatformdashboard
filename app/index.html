@@ -237,8 +237,8 @@
 
     function connect() {
         var target = '/gs-guide-websocket';
-//        var socket = new SockJS('https://iotplatformdispatcher.herokuapp.com' + target);
-        var socket = new SockJS('http://localhost:9092' + target);
+        var socket = new SockJS('https://iotplatformdispatcher.herokuapp.com' + target);
+//        var socket = new SockJS('http://localhost:9092' + target);
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             setConnected(true);
