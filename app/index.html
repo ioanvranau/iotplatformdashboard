@@ -66,114 +66,213 @@
     </md-content>
 
 </div>
-<div>
-    <div id="connect-container">
-        <div>
-            <input id="target" type="text" size="40" style="width: 350px" value="/echo"/>
+
+<script src="./src/main/lib/sockjs.js"></script>
+<script src="./src/main/lib/stomp.js"></script>
+<script src="./src/main/lib/jquery.js"></script>
+<script src="./src/main/app.js"></script>
+
+<div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+                    </button>
+                </div>
+            </form>
         </div>
-        <div>
-            <button id="connect" onclick="connect();">Connect</button>
-            <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
-        </div>
-        <div>
-            <textarea id="message" style="width: 350px">Here is a message!</textarea>
-        </div>
-        <div>
-            <button id="echo" onclick="echo();" disabled="disabled">Echo message</button>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="name">What is your name?</label>
+                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
+                </div>
+                <button id="send" class="btn btn-default" type="submit">Send</button>
+            </form>
         </div>
     </div>
-    <div id="console-container">
-        <div id="console"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="conversation" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Greetings</th>
+                </tr>
+                </thead>
+                <tbody id="greetings">
+                </tbody>
+            </table>
+        </div>
     </div>
+    </form>
 </div>
 
-<style type="text/css">
-    #connect-container {
-        float: left;
-        width: 400px
-    }
+<!--<div>-->
+    <!--<div id="connect-container">-->
+        <!--<div>-->
+            <!--<input id="target" type="text" size="40" style="width: 350px" value="/echo"/>-->
+        <!--</div>-->
+        <!--<div>-->
+            <!--<button id="connect" onclick="connect();">Connect</button>-->
+            <!--<button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>-->
+        <!--</div>-->
+        <!--<div>-->
+            <!--<textarea id="message" style="width: 350px">Here is a message!</textarea>-->
+        <!--</div>-->
+        <!--<div>-->
+            <!--<button id="echo" onclick="echo();" disabled="disabled">Echo message</button>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div id="console-container">-->
+        <!--<div id="console"></div>-->
+    <!--</div>-->
+<!--</div>-->
 
-    #connect-container div {
-        padding: 5px;
-    }
+<!--<style type="text/css">-->
+    <!--#connect-container {-->
+        <!--float: left;-->
+        <!--width: 400px-->
+    <!--}-->
 
-    #console-container {
-        float: left;
-        margin-left: 15px;
-        width: 400px;
-    }
+    <!--#connect-container div {-->
+        <!--padding: 5px;-->
+    <!--}-->
 
-    #console {
-        border: 1px solid #CCCCCC;
-        border-right-color: #999999;
-        border-bottom-color: #999999;
-        height: 170px;
-        overflow-y: scroll;
-        padding: 5px;
-        width: 100%;
-    }
+    <!--#console-container {-->
+        <!--float: left;-->
+        <!--margin-left: 15px;-->
+        <!--width: 400px;-->
+    <!--}-->
 
-    #console p {
-        padding: 0;
-        margin: 0;
-    }
-</style>
-<script src="https://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
-<script type="text/javascript">
-    var ws = null;
+    <!--#console {-->
+        <!--border: 1px solid #CCCCCC;-->
+        <!--border-right-color: #999999;-->
+        <!--border-bottom-color: #999999;-->
+        <!--height: 170px;-->
+        <!--overflow-y: scroll;-->
+        <!--padding: 5px;-->
+        <!--width: 100%;-->
+    <!--}-->
+
+    <!--#console p {-->
+        <!--padding: 0;-->
+        <!--margin: 0;-->
+    <!--}-->
+<!--</style>-->
+<!--<script src="https://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>-->
+<!--<script type="text/javascript">-->
+    <!--var ws = null;-->
+
+    <!--function setConnected(connected) {-->
+        <!--document.getElementById('connect').disabled = connected;-->
+        <!--document.getElementById('disconnect').disabled = !connected;-->
+        <!--document.getElementById('echo').disabled = !connected;-->
+    <!--}-->
+
+    <!--function connect() {-->
+        <!--var target = document.getElementById('target').value;-->
+<!--//        ws = new SockJS('http://localhost:9090' + target);-->
+        <!--ws = new SockJS('https://iotplatformdispatcher.herokuapp.com' + target);-->
+        <!--ws.onopen = function () {-->
+            <!--setConnected(true);-->
+            <!--log('Info: WebSocket connection opened.');-->
+        <!--};-->
+        <!--ws.onmessage = function (event) {-->
+            <!--log('Received: ' + event.data);-->
+        <!--};-->
+        <!--ws.onclose = function () {-->
+            <!--setConnected(false);-->
+            <!--log('Info: WebSocket connection closed.');-->
+        <!--};-->
+    <!--}-->
+
+    <!--function disconnect() {-->
+        <!--if (ws != null) {-->
+            <!--ws.close();-->
+            <!--ws = null;-->
+        <!--}-->
+        <!--setConnected(false);-->
+    <!--}-->
+
+    <!--function echo() {-->
+        <!--if (ws != null) {-->
+            <!--var message = document.getElementById('message').value;-->
+            <!--log('Sent: ' + message);-->
+            <!--ws.send(message);-->
+        <!--} else {-->
+            <!--alert('WebSocket connection not established, please connect.');-->
+        <!--}-->
+    <!--}-->
+
+    <!--function log(message) {-->
+        <!--var console = document.getElementById('console');-->
+        <!--var p = document.createElement('p');-->
+        <!--p.style.wordWrap = 'break-word';-->
+        <!--p.appendChild(document.createTextNode(message));-->
+        <!--console.appendChild(p);-->
+        <!--while (console.childNodes.length > 25) {-->
+            <!--console.removeChild(console.firstChild);-->
+        <!--}-->
+        <!--console.scrollTop = console.scrollHeight;-->
+    <!--}-->
+<!--</script>-->
+<script>
+
+    var stompClient = null;
 
     function setConnected(connected) {
-        document.getElementById('connect').disabled = connected;
-        document.getElementById('disconnect').disabled = !connected;
-        document.getElementById('echo').disabled = !connected;
+        $("#connect").prop("disabled", connected);
+        $("#disconnect").prop("disabled", !connected);
+        if (connected) {
+            $("#conversation").show();
+        }
+        else {
+            $("#conversation").hide();
+        }
+        $("#greetings").html("");
     }
 
     function connect() {
-        var target = document.getElementById('target').value;
-//        ws = new SockJS('http://localhost:9090' + target);
-        ws = new SockJS('https://iotplatformbackend.herokuapp.com' + target);
-        ws.onopen = function () {
+        var target = '/gs-guide-websocket';
+//        var socket = new SockJS('https://iotplatformdispatcher.herokuapp.com' + target);
+        var socket = new SockJS('http://localhost:9092' + target);
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
             setConnected(true);
-            log('Info: WebSocket connection opened.');
-        };
-        ws.onmessage = function (event) {
-            log('Received: ' + event.data);
-        };
-        ws.onclose = function () {
-            setConnected(false);
-            log('Info: WebSocket connection closed.');
-        };
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/greetings', function (greeting) {
+                showGreeting(JSON.parse(greeting.body).content);
+            });
+        });
     }
 
     function disconnect() {
-        if (ws != null) {
-            ws.close();
-            ws = null;
+        if (stompClient != null) {
+            stompClient.disconnect();
         }
         setConnected(false);
+        console.log("Disconnected");
     }
 
-    function echo() {
-        if (ws != null) {
-            var message = document.getElementById('message').value;
-            log('Sent: ' + message);
-            ws.send(message);
-        } else {
-            alert('WebSocket connection not established, please connect.');
-        }
+    function sendName() {
+        stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
     }
 
-    function log(message) {
-        var console = document.getElementById('console');
-        var p = document.createElement('p');
-        p.style.wordWrap = 'break-word';
-        p.appendChild(document.createTextNode(message));
-        console.appendChild(p);
-        while (console.childNodes.length > 25) {
-            console.removeChild(console.firstChild);
-        }
-        console.scrollTop = console.scrollHeight;
+    function showGreeting(message) {
+        $("#greetings").append("<tr><td>" + message + "</td></tr>");
     }
+
+    $(function () {
+        $("form").on('submit', function (e) {
+            e.preventDefault();
+        });
+        $( "#connect" ).click(function() { connect(); });
+        $( "#disconnect" ).click(function() { disconnect(); });
+        $( "#send" ).click(function() { sendName(); });
+    });
 </script>
 
 <script src="./bower_components/angular/angular.js"></script>
