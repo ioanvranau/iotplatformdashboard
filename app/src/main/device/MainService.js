@@ -211,8 +211,7 @@
             connectToDevicesDispatcher: function connectToDevicesDispatcher() {
 
                 var target = '/iot-dispatcher-websocket';
-                var socket = new SockJS('https://iotplatformdispatcher.herokuapp.com' + target);
-                //var socket = new SockJS('http://localhost:9092' + target);
+                var socket = new SockJS(wsUrl + target);
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function(frame) {
                     subscribeToInitDevices();
