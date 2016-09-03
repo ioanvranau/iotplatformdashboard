@@ -63,10 +63,8 @@
         </md-chips>
 
 
-        <md-button ng-click="vm.client.connect(vm.options);">1. Connect</md-button>
-        <md-button ng-click="vm.client.subscribe('androidiot/#', {qos: 2}); alert('Subscribed');">2. Subscribe</md-button>
-        <md-button ng-click="vm.publish('Hello Foo !','androidiot/bar',2);">3. Publish</md-button>
-        <md-button ng-click="vm.client.disconnect();">(4. Disconnect)</md-button>
+        <md-button ng-click="vm.connectToRealDevice(device);">Connect</md-button>
+        <md-button ng-click="vm.disconnectFromRealDevice(device);">Disconnect</md-button>
 
 
     </md-card-actions>

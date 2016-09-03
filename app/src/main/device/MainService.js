@@ -5,14 +5,16 @@
         .module('app')
         .service('mainService', mainService);
 
-    mainService.$inject = ['$q', 'apiUrl'];
+    mainService.$inject = ['$q', 'apiUrl', 'wsUrl', '$mdDialog'];
 
     /* @ngInject */
-    function mainService($q, apiUrl) {
+    function mainService($q, apiUrl, wsUrl, $mdDialog) {
         // Promise-based API
         var url = apiUrl + "device";
         var urlAccess = apiUrl + 'accessRight';
         var urlSensor = apiUrl + "sensor";
+
+        var stompClient = null;
         var addMapToDevice = function getMap(device, $scope, show) {
             device.map = {
                 show: show,
@@ -68,6 +70,30 @@
                 }
             };
         };
+
+        function showDialog(text, description) {
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .parent(angular.element(document.querySelector('#popupContainer')))
+                    .clickOutsideToClose(true)
+                    .title(text)
+                    .textContent(description)
+                    .ok('Ok')
+            );
+        }
+
+        function subscribeToInitDevices() {
+            stompClient.subscribe('/topic/initDevices', function(serverResponse) {
+                var response = JSON.parse(serverResponse.body).content;
+                showDialog(response, 'initMessage');
+            });
+
+            stompClient.subscribe('/topic/accSensor', function(serverResponse) {
+                var response = JSON.parse(serverResponse.body).content;
+                showDialog(response, 'accSensor');
+            });
+        }
+
         return {
             loadAllDevices: function($http, $scope) {
                 var getData = function() {
@@ -180,7 +206,46 @@
                 };
                 return {getData: getData};
             },
-            addMapToDevice: addMapToDevice
+            addMapToDevice: addMapToDevice,
+
+            connectToDevicesDispatcher: function connectToDevicesDispatcher() {
+
+                var target = '/iot-dispatcher-websocket';
+                var socket = new SockJS('https://iotplatformdispatcher.herokuapp.com' + target);
+                //var socket = new SockJS('http://localhost:9092' + target);
+                stompClient = Stomp.over(socket);
+                stompClient.connect({}, function(frame) {
+                    subscribeToInitDevices();
+                    console.log('Connected: ' + frame);
+                    if (!stompClient) {
+                        alert('dsfd');
+                    }
+                    showDialog("Successfully connected to devices dispatcher!");
+                });
+            },
+            connectToRealDevice: function connectToRealDevice(device) {
+                stompClient.send("/iot/init", {}, JSON.stringify({
+                    'deviceName': device.name,
+                    'deviceIp': device.ip,
+                    'deviceId': device.id,
+                    'disconnect': false
+                }));
+            },
+            disconnectFromRealDevice: function disconnectFromRealDevice(device) {
+                stompClient.send("/iot/init", {}, JSON.stringify({
+                    'deviceName': device.name,
+                    'deviceIp': device.ip,
+                    'deviceId': device.id,
+                    'disconnect': true
+                }));
+            },
+            disconnectToDevicesDispatcher: function disconnectToDevicesDispatcher() {
+                if (stompClient != null) {
+                    stompClient.disconnect();
+                }
+                console.log("Disconnected");
+                showDialog("Disconnected!");
+            }
         };
 
 
