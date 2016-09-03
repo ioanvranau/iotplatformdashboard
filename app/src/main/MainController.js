@@ -27,6 +27,8 @@
         vm.toggleDevicesList = buildDelayedToggler('left');
         vm.showContactOptions = showContactOptions;
         vm.showAddNewDevicePrompt = showAddNewDevicePrompt;
+        vm.connectToDevicesDispatcher = connectToDevicesDispatcher;
+        vm.disconnectToDevicesDispatcher = disconnectToDevicesDispatcher;
         vm.deleteDevice = deleteDevice;
         vm.showNewSensorDialog = showNewSensorDialog;
 
@@ -38,10 +40,11 @@
                     vm.devices = [].concat(devices);
                 });
         }
+
         $scope.options = {scrollwheel: false};
         $scope.coordsUpdates = 0;
         $scope.dynamicMoveCtr = 0;
-        $scope.$watchCollection("marker.coords", function (newVal, oldVal) {
+        $scope.$watchCollection("marker.coords", function(newVal, oldVal) {
             if (_.isEqual(newVal, oldVal))
                 return;
             $scope.coordsUpdates++;
@@ -70,6 +73,56 @@
                         $log.debug("toggle " + navID + " is done");
                     });
             }, 200);
+        }
+
+        function showDialog(text, description) {
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .parent(angular.element(document.querySelector('#popupContainer')))
+                    .clickOutsideToClose(true)
+                    .title(text)
+                    .textContent(description)
+                    .ok('Ok')
+            );
+        }
+
+        function connectToDevicesDispatcher() {
+
+            var target = '/gs-guide-websocket';
+            var socket = new SockJS('https://iotplatformdispatcher.herokuapp.com' + target);
+            //var socket = new SockJS('http://localhost:9092' + target);
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/greetings', function(greeting) {
+                    showGreeting(JSON.parse(greeting.body).content);
+                });
+                showDialog("Successfully connected to devices dispatcher!");
+            });
+        }
+
+        function disconnectToDevicesDispatcher() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+            console.log("Disconnected");
+            showDialog("Disconnected!");
+        }
+
+        var stompClient = null;
+
+        function setConnected(connected) {
+            $("#connect").prop("disabled", connected);
+            $("#disconnect").prop("disabled", !connected);
+            if (connected) {
+                $("#conversation").show();
+            }
+            else {
+                $("#conversation").hide();
+            }
+            $("#greetings").html("");
         }
 
         function debounce(func, wait, context) {

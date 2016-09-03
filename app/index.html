@@ -46,13 +46,18 @@
 
 </md-sidenav>
 
-
 <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2">
     <md-toolbar layout="row" class="md-whiteframe-z1" md-closed>
         <md-button ng-click="vm.toggleDevicesList()" class="md-primary" aria-label="Menu" hide-gt-md>
             <md-icon md-svg-src="img/icons/menu.svg"></md-icon>
         </md-button>
         <h1>Devices</h1> <!-- TODO get from tab-->
+        <md-button ng-click="vm.connectToDevicesDispatcher()"
+                   class="md-raised md-primary add-new-device-button-class">Connect to devices dispatcher
+        </md-button>
+        <md-button ng-click="vm.disconnectToDevicesDispatcher()"
+                   class="md-raised md-primary add-new-device-button-class">Disconnect
+        </md-button>
         <md-button ng-click="vm.showAddNewDevicePrompt($event)"
                    class="md-raised md-primary add-new-device-button-class">Add new device
         </md-button>
@@ -112,40 +117,6 @@
 <script>
 
     var stompClient = null;
-
-    function setConnected(connected) {
-        $("#connect").prop("disabled", connected);
-        $("#disconnect").prop("disabled", !connected);
-        if (connected) {
-            $("#conversation").show();
-        }
-        else {
-            $("#conversation").hide();
-        }
-        $("#greetings").html("");
-    }
-
-    function connect() {
-        var target = '/gs-guide-websocket';
-        var socket = new SockJS('https://iotplatformdispatcher.herokuapp.com' + target);
-//        var socket = new SockJS('http://localhost:9092' + target);
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            setConnected(true);
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/greetings', function (greeting) {
-                showGreeting(JSON.parse(greeting.body).content);
-            });
-        });
-    }
-
-    function disconnect() {
-        if (stompClient != null) {
-            stompClient.disconnect();
-        }
-        setConnected(false);
-        console.log("Disconnected");
-    }
 
     function sendName() {
         stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
