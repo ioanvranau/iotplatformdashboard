@@ -36,6 +36,8 @@
         vm.showNewSensorDialog = showNewSensorDialog;
         vm.addInfo = addInfo;
 
+        $scope.downloadAppLink = 'https://github.com/ioanvranau/iotplatformandroidapp/raw/master/app/build/outputs/apk/app-debug.apk';
+
         // Load all registered devices
         function loadAllDevices() {
             mainService
