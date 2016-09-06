@@ -20,7 +20,7 @@
         </md-chips>
         <span class="md-subhead">Latitude: {{device.location.latitude}}</span>
         <span class="md-subhead">Longitude: {{device.location.longitude}}</span>
-        <md-checkbox ng-model="device.map.show" aria-label="Showmap?" >
+        <md-checkbox ng-model="device.map.show" aria-label="Showmap?">
             Show map
         </md-checkbox>
         <md-content ng-if="device.map.show">
@@ -62,9 +62,26 @@
             </md-chip-template>
         </md-chips>
 
+            <md-button ng-click="vm.connectToRealDevice(device);">Connect</md-button>
+            <md-button ng-click="vm.disconnectFromRealDevice(device);">Disconnect</md-button>
+            <md-button ng-click="vm.addInfo();">Info</md-button>
 
-        <md-button ng-click="vm.connectToRealDevice(device);">Connect</md-button>
-        <md-button ng-click="vm.disconnectFromRealDevice(device);">Disconnect</md-button>
+        <div layout="column" ng-cloak>
+            <md-content flex layout-padding>
+            </md-content>
+        </div>
+
+        <md-content>
+            <md-list flex>
+                <md-subheader class="md-no-sticky">Data from device</md-subheader>
+                <md-list-item class="md-3-line" ng-repeat="item in device.messages" ng-click="null">
+                    <div class="md-list-item-text" layout="column">
+                        <p>{{ item.content }}</p>
+                    </div>
+                </md-list-item>
+                <md-divider ></md-divider>
+            </md-list>
+        </md-content>
 
 
     </md-card-actions>

@@ -13,14 +13,15 @@
      * @constructor
      */
 
-    MainController.$inject = ['mainService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$http', '$scope', '$mdDialog', '$mdMedia', '$timeout'];
+    MainController.$inject = ['mainService', '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$http', '$scope', '$mdDialog', '$mdMedia', '$timeout', 'wsUrl'];
 
-    function MainController(mainService, $mdSidenav, $mdBottomSheet, $log, $q, $http, $scope, $mdDialog, $mdMedia, $timeout) {
+    function MainController(mainService, $mdSidenav, $mdBottomSheet, $log, $q, $http, $scope, $mdDialog, $mdMedia, $timeout, wsUrl) {
 
         var vm = this;
         $scope.errors = {};
         var myScopeErrors = $scope.errors;
         var mainDialog = $mdDialog;
+        var stompClient = null;
 
         vm.devices = [];
         vm.currDevice = '';
@@ -33,6 +34,7 @@
         vm.disconnectFromRealDevice = disconnectFromRealDevice;
         vm.deleteDevice = deleteDevice;
         vm.showNewSensorDialog = showNewSensorDialog;
+        vm.addInfo = addInfo;
 
         // Load all registered devices
         function loadAllDevices() {
@@ -72,20 +74,63 @@
             }, 200);
         }
 
+        function connectToDevicesDispatcher() {
+
+            var target = '/iot-dispatcher-websocket';
+            var socket = new SockJS(wsUrl + target);
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                subscribeToInitDevices();
+                console.log('Connected: ' + frame);
+                if (!stompClient) {
+                    alert('dsfd');
+                }
+                mainService.showDialog("Successfully connected to devices dispatcher!");
+            });
+        }
+
+        function subscribeToInitDevices() {
+            stompClient.subscribe('/topic/initDevices', function(serverResponse) {
+                var response = JSON.parse(serverResponse.body).content;
+                mainService.showDialog(response, 'initMessage');
+            });
+
+            stompClient.subscribe('/topic/accSensor', function(serverResponse) {
+                var response = JSON.parse(serverResponse.body).content;
+                addInfo(response);
+            });
+        }
+
         function disconnectToDevicesDispatcher() {
-            mainService.disconnectToDevicesDispatcher()
+            mainService.disconnectToDevicesDispatcher(stompClient)
         }
 
         function connectToRealDevice(device) {
-            mainService.connectToRealDevice(device)
+            mainService.connectToRealDevice(device, stompClient)
         }
 
         function disconnectFromRealDevice(device) {
-            mainService.disconnectFromRealDevice(device)
+            mainService.disconnectFromRealDevice(device, stompClient)
         }
 
-        function connectToDevicesDispatcher() {
-            mainService.connectToDevicesDispatcher();
+        function addInfo(response) {
+            var d = {
+                content: 'ionut'
+            };
+            var c = {
+                content: response
+            };
+            if(vm.devices[0].messages.length > 2 ) {
+                vm.devices[0].messages.splice(0, 1);
+            }
+
+            if(!response) {
+                vm.devices[0].messages.push(d);
+            } else {
+                vm.devices[0].messages.push(c);
+                $scope.$apply();
+            }
+
         }
 
         function debounce(func, wait, context) {
