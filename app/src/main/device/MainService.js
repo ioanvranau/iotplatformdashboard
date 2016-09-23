@@ -13,6 +13,7 @@
         var url = apiUrl + "device";
         var urlAccess = apiUrl + 'accessRight';
         var urlSensor = apiUrl + "sensor";
+        var stompClient = null;
 
         var addMapToDevice = function getMap(device, $scope, show) {
             device.map = {
@@ -79,6 +80,38 @@
                     .textContent(description)
                     .ok('Ok')
             );
+        }
+
+        function subscribeToInitDevices(stompClient, $scope, devices) {
+            stompClient.subscribe('/topic/initDevices', function(serverResponse) {
+                var response = JSON.parse(serverResponse.body).content;
+                showDialog(response, 'initMessage');
+            });
+
+            stompClient.subscribe('/topic/accSensor', function(serverResponse) {
+                var response = JSON.parse(serverResponse.body).content;
+                addInfo(response, $scope, devices);
+            });
+        }
+
+        function addInfo(response, $scope, devices) {
+            var d = {
+                content: 'No data received!'
+            };
+            var c = {
+                content: response
+            };
+            if(devices[0].messages.length > 2 ) {
+                devices[0].messages.splice(0, 1);
+            }
+
+            if(!response) {
+                devices[0].messages.push(d);
+            } else {
+                devices[0].messages.push(c);
+            }
+            $scope.$apply();
+
         }
 
         return {
@@ -197,7 +230,7 @@
             addMapToDevice: addMapToDevice,
             showDialog: showDialog,
 
-            connectToRealDevice: function connectToRealDevice(device, stompClient) {
+            connectToRealDevice: function connectToRealDevice(device) {
                 stompClient.send("/iot/init", {}, JSON.stringify({
                     'deviceName': device.name,
                     'deviceIp': device.ip,
@@ -205,7 +238,7 @@
                     'disconnect': false
                 }));
             },
-            disconnectFromRealDevice: function disconnectFromRealDevice(device, stompClient) {
+            disconnectFromRealDevice: function disconnectFromRealDevice(device) {
                 stompClient.send("/iot/init", {}, JSON.stringify({
                     'deviceName': device.name,
                     'deviceIp': device.ip,
@@ -213,12 +246,28 @@
                     'disconnect': true
                 }));
             },
-            disconnectToDevicesDispatcher: function disconnectToDevicesDispatcher(stompClient) {
+            disconnectToDevicesDispatcher: function disconnectToDevicesDispatcher() {
                 if (stompClient != null) {
                     stompClient.disconnect();
+                    console.log("Disconnected");
+                    showDialog("Disconnected!");
+                } else {
+                    showDialog("No need for disconnecting!");
                 }
-                console.log("Disconnected");
-                showDialog("Disconnected!");
+            },
+            connectToDevicesDispatcher: function connectToDevicesDispatcher($scope, devices) {
+
+                var target = '/iot-dispatcher-websocket';
+                var socket = new SockJS(wsUrl + target);
+                stompClient = Stomp.over(socket);
+                stompClient.connect({}, function(frame) {
+                    subscribeToInitDevices(stompClient, $scope, devices);
+                    console.log('Connected: ' + frame);
+                    if (!stompClient) {
+                        alert('dsfd');
+                    }
+                    showDialog("Successfully connected to devices dispatcher!");
+                });
             }
         };
 
