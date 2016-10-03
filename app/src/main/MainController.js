@@ -260,10 +260,11 @@
             });
 
             function DialogController($scope, $mdDialog) {
+
                 $scope.device = {
                     ip: '',
                     name: 'Device',
-                    id: 1,
+                    id: '',
                     tags: [],
                     location: {
                         latitude: 46.77224125123537,
@@ -271,6 +272,7 @@
                     },
                     accessRights: []
                 };
+                getNewDeviceId();
                 mainService.addMapToDevice($scope.device, $scope, false);
                 $scope.selectedItem = null;
                 $scope.searchText = null;
@@ -282,7 +284,8 @@
                 $scope.numberBuffer = '';
 
                 $scope.querySearch = function querySearch(query) {
-                    return query ? $scope.accessRights.filter(createFilterFor(query)) : [];
+
+                    return query ? $scope.accessRights.filter(createFilterFor(query)) : $scope.accessRights;
                 };
 
                 function createFilterFor(query) {
@@ -299,6 +302,14 @@
                         .loadAccessRights($http).getData()
                         .then(function(accessRights) {
                             $scope.accessRights = [].concat(accessRights);
+                        });
+                }
+
+                function getNewDeviceId(type) {
+                    mainService
+                        .generateNewDeviceId($http, type).getData()
+                        .then(function(newDeviceId) {
+                            $scope.device.id = newDeviceId;
                         });
                 }
 

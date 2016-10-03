@@ -10,9 +10,10 @@
     /* @ngInject */
     function mainService($q, apiUrl, wsUrl, $mdDialog) {
         // Promise-based API
-        var url = apiUrl + "device";
-        var urlAccess = apiUrl + 'accessRight';
-        var urlSensor = apiUrl + "sensor";
+        var DEVICE_URL = apiUrl + "device";
+        var NEW_DEVICE_URL = apiUrl + "newDeviceId";
+        var ACCESS_RIGHTS_URL = apiUrl + 'accessRight';
+        var SENSOR_URL = apiUrl + "sensor";
         var stompClient = null;
 
         var addMapToDevice = function getMap(device, $scope, show) {
@@ -101,11 +102,11 @@
             var c = {
                 content: response
             };
-            if(devices[0].messages.length > 2 ) {
+            if (devices[0].messages.length > 2) {
                 devices[0].messages.splice(0, 1);
             }
 
-            if(!response) {
+            if (!response) {
                 devices[0].messages.push(d);
             } else {
                 devices[0].messages.push(c);
@@ -118,14 +119,14 @@
             loadAllDevices: function($http, $scope) {
                 var getData = function() {
 
-                    return $http.get(url).then(function(result) {
+                    return $http.get(DEVICE_URL).then(function(result) {
                         var devices = result.data;
 
                         if (devices) {
                             for (var i = 0; i < devices.length; i++) {
                                 var device = devices[i];
                                 device.messages = [];
-                                addMapToDevice(device, $scope, true);
+                                addMapToDevice(device, $scope, false);
                             }
                         }
                         return devices;
@@ -134,9 +135,24 @@
                 return {getData: getData};
             },
 
+            generateNewDeviceId: function($http, type) {
+                var getData = function() {
+                    var typePrefix = '';
+                    if (type) {
+                        typePrefix = '?type=' + type;
+                    }
+
+                    return $http.get(NEW_DEVICE_URL + typePrefix).then(function(result) {
+                        var newDeviceId = result.data.content;
+                        return newDeviceId;
+                    });
+                };
+                return {getData: getData};
+            },
+
             loadAccessRights: function($http) {
                 var getData = function() {
-                    return $http.get(urlAccess).then(function(result) {
+                    return $http.get(ACCESS_RIGHTS_URL).then(function(result) {
                         var data = result.data;
                         return data;
                     });
@@ -184,7 +200,7 @@
                 var getData = function() {
                     console.log(jsonDevice);
 
-                    return $http.post(url, jsonDevice).then(function(result) {
+                    return $http.post(DEVICE_URL, jsonDevice).then(function(result) {
 
                         return result.data;
                     });
@@ -211,7 +227,7 @@
                 });
                 var getData = function() {
                     console.log(jsonSensor);
-                    return $http.post(urlSensor, jsonSensor).then(function(result) {
+                    return $http.post(SENSOR_URL, jsonSensor).then(function(result) {
 
                         return result.data;
                     });
@@ -221,7 +237,7 @@
 
             deleteDevice: function($http, device) {
                 var getData = function() {
-                    return $http.delete(url + '?id=' + device.id).then(function(result) {
+                    return $http.delete(DEVICE_URL + '?id=' + device.id).then(function(result) {
                         return result.data;
                     });
                 };

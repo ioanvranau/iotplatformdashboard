@@ -12,8 +12,8 @@
         <md-dialog-content layout-gt-sm="row" layout-padding>
             <md-dialog-content layout-gt-sm="column" layout-padding>
                 <md-input-container style="margin-top: 5px">
-                    <label>Ip</label>
-                    <input ng-model="device.ip">
+                    <label>Id</label>
+                    <input ng-model="device.id" ng-readonly="true">
                 </md-input-container>
                 <md-input-container>
                     <label>Name</label>
@@ -53,11 +53,15 @@
 
                 <md-input-container>
                     <label>Access Rights: </label>
-                    <md-chips ng-model="device.accessRights" md-autocomplete-snap="" readonly="false"
-                              md-removable="true" md-require-match=""
+                    <md-chips ng-model="device.accessRights" md-autocomplete-snap readonly="false"
+                              md-removable="true" md-require-match
                               class="custom-chips">
-                        <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText"
-                                         md-items="item in querySearch(searchText)" md-item-text="item.name"
+                        <md-autocomplete md-min-length="0"
+                                         md-no-cache="true"
+                                         md-selected-item="selectedItem"
+                                         md-search-text="searchText"
+                                         md-items="item in querySearch(searchText)"
+                                         md-item-text="item.name"
                                          placeholder="Search for an access right">
                             <span md-highlight-text="searchText">{{item.name}} </span>
                         </md-autocomplete>
