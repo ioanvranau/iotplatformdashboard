@@ -91,25 +91,43 @@
 
             stompClient.subscribe('/topic/accSensor', function(serverResponse) {
                 var response = JSON.parse(serverResponse.body).content;
-                addInfo(response, $scope, devices);
+                var messageFromDispatcher;
+                try {
+                    messageFromDispatcher = JSON.parse(response);
+                } catch (e){
+                    console.log("Cannot parse dispatcher JSON: " + response);
+                    return;
+                }
+                var dispatcherId = messageFromDispatcher.deviceId;
+                var deviceIndex = -1;
+                for (var i = 0; i < devices.length; i++) {
+                    var device = devices[i];
+                    var deviceId = device.id;
+                    if(deviceId == dispatcherId){
+                        deviceIndex = i;
+                    }
+                }
+                if(deviceIndex != -1) {
+                    addInfo(messageFromDispatcher.message, $scope, devices, deviceIndex);
+                }
             });
         }
 
-        function addInfo(response, $scope, devices) {
+        function addInfo(response, $scope, devices, deviceIndex) {
             var d = {
                 content: 'No data received!'
             };
             var c = {
                 content: response
             };
-            if (devices[0].messages.length > 2) {
-                devices[0].messages.splice(0, 1);
+            if (devices[deviceIndex].messages.length > 2) {
+                devices[deviceIndex].messages.splice(0, 1);
             }
 
             if (!response) {
-                devices[0].messages.push(d);
+                devices[deviceIndex].messages.push(d);
             } else {
-                devices[0].messages.push(c);
+                devices[deviceIndex].messages.push(c);
             }
             $scope.$apply();
 

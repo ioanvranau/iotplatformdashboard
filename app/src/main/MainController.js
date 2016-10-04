@@ -204,7 +204,7 @@
         function deleteDevice($event, device) {
 
             var confirm = $mdDialog.confirm()
-                .title('Would you like to delete the device: ' + device.name + ' with ip: ' + device.ip + ' ?')
+                .title('Would you like to delete the device: ' + device.name + ' with id: ' + device.id + ' ?')
                 .clickOutsideToClose(true)
                 .ariaLabel('Delete device')
                 .targetEvent($event)
