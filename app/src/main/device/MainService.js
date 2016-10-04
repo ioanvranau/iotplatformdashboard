@@ -190,7 +190,7 @@
                 }
 
                 var jsonDevice = JSON.stringify({
-                    ip: device.ip,
+                    id: device.id,
                     type: device.type,
                     name: device.name,
                     location: location,
