@@ -62,25 +62,22 @@
             </md-chip-template>
         </md-chips>
 
-            <md-button ng-click="vm.connectToRealDevice(device);">Connect</md-button>
-            <md-button ng-click="vm.disconnectFromRealDevice(device);">Disconnect</md-button>
+        <md-button ng-click="vm.connectToRealDevice(device);">Connect</md-button>
+        <md-button ng-click="vm.disconnectFromRealDevice(device);">Disconnect</md-button>
 
-        <div layout="column" ng-cloak>
-            <md-content flex layout-padding>
-            </md-content>
-        </div>
-
-        <md-content>
-            <md-list flex>
-                <md-subheader class="md-no-sticky">Data from device</md-subheader>
-                <md-list-item class="md-3-line" ng-repeat="item in device.messages" ng-click="null">
-                    <div class="md-list-item-text" layout="column">
-                        <p>{{ item.content }}</p>
-                    </div>
-                </md-list-item>
-                <md-divider ></md-divider>
-            </md-list>
-        </md-content>
+        <md-card flex-gt-sm="90" flex-gt-md="80">
+            <md-card-content>
+                <h3>Data from device</h3>
+                <md-list>
+                    <md-list-item class="md-3-line" ng-repeat="item in device.messages" ng-click="null">
+                        <div class="md-list-item-text" layout="column">
+                            <p>{{ item.content }}</p>
+                        </div>
+                        <md-divider></md-divider>
+                    </md-list-item>
+                </md-list>
+            </md-card-content>
+        </md-card>
 
 
     </md-card-actions>
