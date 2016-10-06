@@ -83,13 +83,8 @@
             );
         }
 
-        function subscribeToInitDevices(stompClient, $scope, devices) {
-            stompClient.subscribe('/topic/initDevices', function(serverResponse) {
-                var response = JSON.parse(serverResponse.body).content;
-                showDialog(response, 'initMessage');
-            });
-
-            stompClient.subscribe('/topic/accSensor', function(serverResponse) {
+        function subscribeToSensorTopic(stompClient, $scope, devices) {
+            stompClient.subscribe('/receiver/accSensor', function(serverResponse) {
                 var response = JSON.parse(serverResponse.body).content;
                 var messageFromDispatcher;
                 try {
@@ -264,22 +259,6 @@
             addMapToDevice: addMapToDevice,
             showDialog: showDialog,
 
-            connectToRealDevice: function connectToRealDevice(device) {
-                stompClient.send("/iot/init", {}, JSON.stringify({
-                    'deviceName': device.name,
-                    'deviceIp': device.ip,
-                    'deviceId': device.id,
-                    'disconnect': false
-                }));
-            },
-            disconnectFromRealDevice: function disconnectFromRealDevice(device) {
-                stompClient.send("/iot/init", {}, JSON.stringify({
-                    'deviceName': device.name,
-                    'deviceIp': device.ip,
-                    'deviceId': device.id,
-                    'disconnect': true
-                }));
-            },
             disconnectToDevicesDispatcher: function disconnectToDevicesDispatcher() {
                 if (stompClient != null) {
                     stompClient.disconnect();
@@ -295,12 +274,16 @@
                 var socket = new SockJS(wsUrl + target);
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function(frame) {
-                    subscribeToInitDevices(stompClient, $scope, devices);
+                    stompClient.subscribe('/receiver/initDispatcherConnection', function(serverResponse) {
+                        var response = JSON.parse(serverResponse.body).content;
+                        showDialog(response);
+                    });
+                    stompClient.send("/destination/initDispatcherConnection");
+                    subscribeToSensorTopic(stompClient, $scope, devices);
                     console.log('Connected: ' + frame);
                     if (!stompClient) {
-                        alert('dsfd');
+                        showDialog("Could not connect to device dispatcher!");
                     }
-                    showDialog("Successfully connected to devices dispatcher!");
                 });
             }
         };
