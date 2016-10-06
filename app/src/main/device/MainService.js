@@ -108,26 +108,26 @@
                     }
                 }
                 if(deviceIndex != -1) {
-                    addInfo(messageFromDispatcher.message, $scope, devices, deviceIndex);
+                    addInfo(messageFromDispatcher.message, $scope, devices[deviceIndex]);
                 }
             });
         }
 
-        function addInfo(response, $scope, devices, deviceIndex) {
+        function addInfo(response, $scope, device) {
             var d = {
                 content: 'No data received!'
             };
             var c = {
                 content: response
             };
-            if (devices[deviceIndex].messages.length > 2) {
-                devices[deviceIndex].messages.splice(0, 1);
+            if (device.messages.length > 2) {
+                device.messages.splice(0, 1);
             }
 
             if (!response) {
-                devices[deviceIndex].messages.push(d);
+                device.messages.push(d);
             } else {
-                devices[deviceIndex].messages.push(c);
+                device.messages.push(c);
             }
             $scope.$apply();
 
