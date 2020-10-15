@@ -2,7 +2,7 @@ run chrome without security
 C:\Program Files (x86)\Google\Chrome\Application>chrome.exe --user-data-dir="C:/Chrome dev session" --disable-web-security
 
 The angular-seed project comes pre-configured with a local development web server.  It is a node.js
-tool called [http-server][http-server].  You can install http-server globally:
+tool called [http-server][http-server].  You can install http-server globally
 
 ```
 npm install -g live-server
