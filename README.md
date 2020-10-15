@@ -21,7 +21,7 @@ bower update
 
 This Material **start*** project is a *seed* for AngularJS Material applications. The project contains a sample AngularJS application and is pre-configured to install the Angular framework and a bunch of development and testing tools for instant web development gratification.
 
-This sample application is intended to be useful as both a learning tool and a skeleton application
+This sample application is intended to be useful as both a learning tool and a skeleton app
 for a typical [AngularJS Material](http://material.angularjs.org/) web app: comprised of a Side navigation
 area and a content area. You can use it to quickly bootstrap your AngularJS webapp projects and dev
 environment for these projects.
